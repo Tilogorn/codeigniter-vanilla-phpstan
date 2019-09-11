@@ -1,25 +1,24 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Welcome extends CI_Controller
+{
+    public function index()
+    {
+        // Works! And shows PHPStan-Error, when wrongly used
+        $a = $this->sum(4, 5);
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/user_guide/general/urls.html
-	 */
-	public function index()
-	{
-		$this->load->view('welcome_message');
-	}
+        $this->load->model('WelcomeModel');
+        // PHPStan-Error: Access to an undefined property Welcome::$WelcomeModel
+        // Expected: "Function getUser expects two parameters" (see ../models/WelcomeModel.php)
+        $b = $this->WelcomeModel->getUser(1234);
+
+        // Works
+        $this->load->view('welcome_message');
+    }
+
+    public function sum($p1, $p2)
+    {
+        return $p1 + $p2;
+    }
 }
